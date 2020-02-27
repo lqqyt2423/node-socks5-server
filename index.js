@@ -1,6 +1,7 @@
 'use strict';
 
 const net = require('net');
+const ipv6 = require('./ipv6');
 
 class SocketHandler {
   constructor(socket, options = {}) {
@@ -108,22 +109,41 @@ class SocketHandler {
   //   | 1  |  1  | X'00' |  1   | Variable |    2     |
   //   +----+-----+-------+------+----------+----------+
 
+  //   o  X'00' succeeded
+  //   o  X'01' general SOCKS server failure
+  //   o  X'02' connection not allowed by ruleset
+  //   o  X'03' Network unreachable
+  //   o  X'04' Host unreachable
+  //   o  X'05' Connection refused
+  //   o  X'06' TTL expired
+  //   o  X'07' Command not supported
+  //   o  X'08' Address type not supported
+  //   o  X'09' to X'FF' unassigned
+
   reply(rep) {
     const data = [0x05, rep, 0x00];
     const address = this.socket.address();
+
     this.logger.debug(address);
+
     if (address.family === 'IPv4') {
       data.push(0x01);
       for (const str of address.address.split('.')) {
         data.push(Number(str));
       }
-      data.push(address.port >> 8);
-      data.push(address.port & 0xff);
-
-      this.socket.write(Buffer.from(data));
-    } else {
-      throw new Error('IPv6 not support');
     }
+    else if (address.family === 'IPv6') {
+      data.push(0x04);
+      const ipv6BufArr = ipv6.toBufArr(address.address);
+      for (const byte of ipv6BufArr) {
+        data.push(byte);
+      }
+    }
+
+    data.push(address.port >> 8);
+    data.push(address.port & 0xff);
+
+    this.socket.write(Buffer.from(data));
   }
 
   async request() {
@@ -140,8 +160,11 @@ class SocketHandler {
       this.logger.error('Unsupported SOCKS version: %d', data[0]);
       return this.socket.end();
     }
+
+    // o  CONNECT X'01'
+    // o  BIND X'02'
+    // o  UDP ASSOCIATE X'03'
     if (data[1] !== 0x01) {
-      // X'07' Command not supported
       this.reply(0x07);
       return this.socket.end();
     }

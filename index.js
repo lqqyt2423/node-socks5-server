@@ -1,6 +1,8 @@
 'use strict';
 
 const net = require('net');
+const dns = require('dns');
+const util = require('util');
 const ipv6 = require('./ipv6');
 
 class SocketHandler {
@@ -173,14 +175,28 @@ class SocketHandler {
 
     let dstHost, dstPort;
     switch (data[3]) {
-    case 0x01:
+    case 0x01: // ipv4
       dstHost = `${data[4]}.${data[5]}.${data[6]}.${data[7]}`;
       dstPort = (data[8] << 8) | data[9];
       break;
-    case 0x04:
-    case 0x03:
+    case 0x03: // domain
+    {
+      const domainLen = data[4];
+      const domain = data.toString('ascii', 5, 5+domainLen);
+      try {
+        const ips = await util.promisify(dns.resolve4)(domain);
+        dstHost = ips[0];
+      } catch (err) {
+        this.logger.error(err);
+        this.reply(0x04);
+        return this.socket.end();
+      }
+      dstPort = (data[5+domainLen] << 8) | data[5+domainLen+1];
+      break;
+    }
+    case 0x04: // ipv6
     default:
-      throw new Error(`${data[3]} not support`);
+      this.logger.error(`ATYP ${data[3]} not support`);
     }
 
     let replyed = false;

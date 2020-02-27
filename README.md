@@ -31,8 +31,6 @@ curl http://www.baidu.com/ --socks5 user:password@localhost:1080
 
 ## todo
 
-- ipv6 support
-- domain support
 - bind
 - udp
 

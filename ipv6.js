@@ -1,6 +1,7 @@
 'use strict';
 
 const net = require('net');
+const assert = require('assert');
 
 function toBufArr(addr) {
   const bufArr = new Array(16).fill(0);
@@ -65,4 +66,16 @@ function toBufArr(addr) {
   return bufArr;
 }
 
+function toStr(buf) {
+  assert(buf.length === 16);
+
+  const dwArr = [];
+  for (let i = 0; i < 16; i += 2) {
+    const dw = (buf[i] << 8) | buf[i+1];
+    dwArr.push(dw.toString(16));
+  }
+  return dwArr.join(':');
+}
+
 exports.toBufArr = toBufArr;
+exports.toStr = toStr;

@@ -195,8 +195,16 @@ class SocketHandler {
       break;
     }
     case 0x04: // ipv6
+    {
+      const addrBuf = data.slice(4, 20);
+      dstHost = ipv6.toStr(addrBuf);
+      dstPort = (data[20] << 8) | data[21];
+      break;
+    }
     default:
       this.logger.error(`ATYP ${data[3]} not support`);
+      this.reply(0x08);
+      return this.socket.end();
     }
 
     let replyed = false;
@@ -224,6 +232,7 @@ class SocketHandler {
 
     proxy.once('connect', () => {
       this.reply(0x00);
+      replyed = true;
 
       this.socket.pipe(proxy);
       proxy.pipe(this.socket);

@@ -15,4 +15,4 @@ const userPassAuthFn = (user, password) => {
 const server = socks5.createServer({
   userPassAuthFn,
 });
-server.listen(1080, 'localhost');
+server.listen(1080);

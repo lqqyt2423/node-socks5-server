@@ -122,9 +122,13 @@ class SocketHandler {
   //   o  X'08' Address type not supported
   //   o  X'09' to X'FF' unassigned
 
-  reply(rep) {
+  reply(rep, address) {
     const data = [0x05, rep, 0x00];
-    const address = this.socket.address();
+
+    if (!address) {
+      this.socket.write(Buffer.from(data.concat([0x01, 0, 0, 0, 0, 0, 0])));
+      return;
+    }
 
     this.logger.debug(address);
 
@@ -231,7 +235,7 @@ class SocketHandler {
     });
 
     proxy.once('connect', () => {
-      this.reply(0x00);
+      this.reply(0x00, proxy.address());
       replyed = true;
 
       this.socket.pipe(proxy);

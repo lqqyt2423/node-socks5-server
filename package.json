@@ -1,10 +1,13 @@
 {
   "name": "node-socks5-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Socks5 server implements with nodejs",
   "main": "index.js",
   "scripts": {
     "test": "node test/ipv6.js"
+  },
+  "bin": {
+    "node-socks5": "./node-socks5.js"
   },
   "author": "liqiang",
   "license": "ISC",

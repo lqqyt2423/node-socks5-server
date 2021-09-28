@@ -35,3 +35,5 @@ assert.deepEqual(
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 1, 2, 3, 4],
   ipv6.toBufArr(ipv6.toStr([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 1, 2, 3, 4]))
 );
+
+console.log('ipv6.js all test passed!');

@@ -94,6 +94,10 @@ class SocketHandler {
       this.socket.write(Buffer.from([0x05, 0x02]));
       return await this.authUserPass();
     }
+    else if (methods.includes(0x00) && this.userPassAuthFn) {
+      this.logger.error('auth method required');
+      this.socket.end(Buffer.from([0x05, 0xff]));
+    }
     else if (methods.includes(0x00)) {
       this.socket.write(Buffer.from([0x05, 0x00]));
     }

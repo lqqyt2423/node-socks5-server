@@ -90,7 +90,7 @@ class SocketHandler {
     const nmethods = data[1];
     const methods = data.slice(2, 2 + nmethods);
     // only support 0x00 0x02
-    if (methods.includes(0x02) && this.userPassAuthFn) {
+    if ((methods.includes(0x00) || methods.includes(0x02)) && this.userPassAuthFn) {
       this.socket.write(Buffer.from([0x05, 0x02]));
       return await this.authUserPass();
     }

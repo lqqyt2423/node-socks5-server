@@ -9,6 +9,8 @@ an intermediate proxy layer. This can be used to bypass firewalls or NATs.
 - "No Auth" mode
 - User/Password authentication
 - Support for the CONNECT command
+- Support UDP
+- set localAddress interface
 
 ## Usage for command
 
@@ -54,7 +56,6 @@ curl http://www.baidu.com/ --socks5 user:password@localhost:1080
 ## TODO
 
 - bind
-- udp
 
 ## Thanks
 

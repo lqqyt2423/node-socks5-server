@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const net = require('net');
-const assert = require('assert');
+const net = require("net");
+const assert = require("assert");
 
 function toBufArr(addr) {
   const bufArr = new Array(16).fill(0);
@@ -10,7 +10,7 @@ function toBufArr(addr) {
   let index = 0;
   let dColonIndex = -1;
   let ipv4Index = -1;
-  let groupStr = '';
+  let groupStr = "";
 
   for (let i = 0, len = addr.length; i < len; i++) {
     // 58 :
@@ -19,10 +19,10 @@ function toBufArr(addr) {
         const byte2 = parseInt(groupStr, 16);
         bufArr[index++] = byte2 >> 8;
         bufArr[index++] = byte2 & 0xff;
-        groupStr = '';
+        groupStr = "";
       }
 
-      if (addr.charCodeAt(i+1) === 58) {
+      if (addr.charCodeAt(i + 1) === 58) {
         dColonIndex = index;
         i++;
       }
@@ -34,11 +34,9 @@ function toBufArr(addr) {
       if (groupStr) {
         const byte1 = parseInt(groupStr);
         bufArr[index++] = byte1;
-        groupStr = '';
+        groupStr = "";
       }
-    }
-
-    else {
+    } else {
       groupStr += addr[i];
     }
   }
@@ -52,13 +50,13 @@ function toBufArr(addr) {
       bufArr[index++] = byte2 >> 8;
       bufArr[index++] = byte2 & 0xff;
     }
-    groupStr = '';
+    groupStr = "";
   }
 
   if (dColonIndex > -1) {
     const offset = 16 - index;
     for (let i = index - 1; i >= dColonIndex; i--) {
-      bufArr[i+offset] = bufArr[i];
+      bufArr[i + offset] = bufArr[i];
       bufArr[i] = 0x00;
     }
   }
@@ -71,10 +69,10 @@ function toStr(buf) {
 
   const dwArr = [];
   for (let i = 0; i < 16; i += 2) {
-    const dw = (buf[i] << 8) | buf[i+1];
+    const dw = (buf[i] << 8) | buf[i + 1];
     dwArr.push(dw.toString(16));
   }
-  return dwArr.join(':');
+  return dwArr.join(":");
 }
 
 exports.toBufArr = toBufArr;

@@ -11,7 +11,7 @@ const server = socks5.createServer({
     error: console.error,
   },
   // localAddress: "192.168.0.100", /* Local Interface address */
-  // dns: "8.8.8.8",                 /* use Specific DNS */
+  dns: "8.8.8.8",                 /* use Specific DNS */
 });
 
 server.listen(1080);

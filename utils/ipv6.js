@@ -22,7 +22,7 @@ function toBufArr(addr) {
         groupStr = '';
       }
 
-      if (addr.charCodeAt(i+1) === 58) {
+      if (addr.charCodeAt(i + 1) === 58) {
         dColonIndex = index;
         i++;
       }
@@ -36,9 +36,7 @@ function toBufArr(addr) {
         bufArr[index++] = byte1;
         groupStr = '';
       }
-    }
-
-    else {
+    } else {
       groupStr += addr[i];
     }
   }
@@ -58,7 +56,7 @@ function toBufArr(addr) {
   if (dColonIndex > -1) {
     const offset = 16 - index;
     for (let i = index - 1; i >= dColonIndex; i--) {
-      bufArr[i+offset] = bufArr[i];
+      bufArr[i + offset] = bufArr[i];
       bufArr[i] = 0x00;
     }
   }
@@ -71,7 +69,7 @@ function toStr(buf) {
 
   const dwArr = [];
   for (let i = 0; i < 16; i += 2) {
-    const dw = (buf[i] << 8) | buf[i+1];
+    const dw = (buf[i] << 8) | buf[i + 1];
     dwArr.push(dw.toString(16));
   }
   return dwArr.join(':');

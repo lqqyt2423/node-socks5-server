@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const ipv6 = require('../ipv6');
+const ipv6 = require('../utils/ipv6');
 
 assert.deepEqual(ipv6.toBufArr('::'), [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 assert.deepEqual(ipv6.toBufArr('::1'), [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);

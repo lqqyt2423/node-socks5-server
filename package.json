@@ -1,6 +1,6 @@
 {
   "name": "node-socks5-server",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Socks5 server implements with nodejs",
   "main": "index.js",
   "scripts": {

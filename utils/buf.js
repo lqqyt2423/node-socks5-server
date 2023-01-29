@@ -1,6 +1,6 @@
 function numberToBuffer(num, len = 2, byteOrder = 0) {
   if (len < 1) {
-    throw Error("len must be greater than 0");
+    throw Error('len must be greater than 0');
   }
 
   const buf = Buffer.alloc(len);

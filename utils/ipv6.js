@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-const net = require("net");
-const assert = require("assert");
+const net = require('net');
+const assert = require('assert');
 
 function toBufArr(addr) {
   const bufArr = new Array(16).fill(0);
@@ -10,7 +10,7 @@ function toBufArr(addr) {
   let index = 0;
   let dColonIndex = -1;
   let ipv4Index = -1;
-  let groupStr = "";
+  let groupStr = '';
 
   for (let i = 0, len = addr.length; i < len; i++) {
     // 58 :
@@ -19,7 +19,7 @@ function toBufArr(addr) {
         const byte2 = parseInt(groupStr, 16);
         bufArr[index++] = byte2 >> 8;
         bufArr[index++] = byte2 & 0xff;
-        groupStr = "";
+        groupStr = '';
       }
 
       if (addr.charCodeAt(i + 1) === 58) {
@@ -34,7 +34,7 @@ function toBufArr(addr) {
       if (groupStr) {
         const byte1 = parseInt(groupStr);
         bufArr[index++] = byte1;
-        groupStr = "";
+        groupStr = '';
       }
     } else {
       groupStr += addr[i];
@@ -50,7 +50,7 @@ function toBufArr(addr) {
       bufArr[index++] = byte2 >> 8;
       bufArr[index++] = byte2 & 0xff;
     }
-    groupStr = "";
+    groupStr = '';
   }
 
   if (dColonIndex > -1) {
@@ -72,7 +72,7 @@ function toStr(buf) {
     const dw = (buf[i] << 8) | buf[i + 1];
     dwArr.push(dw.toString(16));
   }
-  return dwArr.join(":");
+  return dwArr.join(':');
 }
 
 exports.toBufArr = toBufArr;

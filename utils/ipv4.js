@@ -1,6 +1,6 @@
 const ip = exports;
-const { Buffer } = require("buffer");
-const os = require("os");
+const { Buffer } = require('buffer');
+const os = require('os');
 
 ip.toBuffer = function (ip, buff, offset) {
   offset = ~~offset;
@@ -13,7 +13,7 @@ ip.toBuffer = function (ip, buff, offset) {
       result[offset++] = parseInt(byte, 10) & 0xff;
     });
   } else if (this.isV6Format(ip)) {
-    const sections = ip.split(":", 8);
+    const sections = ip.split(':', 8);
 
     let i;
     for (i = 0; i < sections.length; i++) {
@@ -22,23 +22,23 @@ ip.toBuffer = function (ip, buff, offset) {
 
       if (isv4) {
         v4Buffer = this.toBuffer(sections[i]);
-        sections[i] = v4Buffer.slice(0, 2).toString("hex");
+        sections[i] = v4Buffer.slice(0, 2).toString('hex');
       }
 
       if (v4Buffer && ++i < 8) {
-        sections.splice(i, 0, v4Buffer.slice(2, 4).toString("hex"));
+        sections.splice(i, 0, v4Buffer.slice(2, 4).toString('hex'));
       }
     }
 
-    if (sections[0] === "") {
-      while (sections.length < 8) sections.unshift("0");
-    } else if (sections[sections.length - 1] === "") {
-      while (sections.length < 8) sections.push("0");
+    if (sections[0] === '') {
+      while (sections.length < 8) sections.unshift('0');
+    } else if (sections[sections.length - 1] === '') {
+      while (sections.length < 8) sections.push('0');
     } else if (sections.length < 8) {
-      for (i = 0; i < sections.length && sections[i] !== ""; i++);
+      for (i = 0; i < sections.length && sections[i] !== ''; i++);
       const argv = [i, 1];
       for (i = 9 - sections.length; i > 0; i--) {
-        argv.push("0");
+        argv.push('0');
       }
       sections.splice(...argv);
     }
@@ -68,15 +68,15 @@ ip.toString = function (buff, offset, length) {
     for (let i = 0; i < length; i++) {
       result.push(buff[offset + i]);
     }
-    result = result.join(".");
+    result = result.join('.');
   } else if (length === 16) {
     // IPv6
     for (let i = 0; i < length; i += 2) {
       result.push(buff.readUInt16BE(offset + i).toString(16));
     }
-    result = result.join(":");
-    result = result.replace(/(^|:)0(:0)*:0(:|$)/, "$1::$3");
-    result = result.replace(/:{3,4}/, "::");
+    result = result.join(':');
+    result = result.replace(/(^|:)0(:0)*:0(:|$)/, '$1::$3');
+    result = result.replace(/:{3,4}/, '::');
   }
 
   return result;
@@ -95,23 +95,23 @@ ip.isV6Format = function (ip) {
 
 function _normalizeFamily(family) {
   if (family === 4) {
-    return "ipv4";
+    return 'ipv4';
   }
   if (family === 6) {
-    return "ipv6";
+    return 'ipv6';
   }
-  return family ? family.toLowerCase() : "ipv4";
+  return family ? family.toLowerCase() : 'ipv4';
 }
 
 ip.fromPrefixLen = function (prefixlen, family) {
   if (prefixlen > 32) {
-    family = "ipv6";
+    family = 'ipv6';
   } else {
     family = _normalizeFamily(family);
   }
 
   let len = 4;
-  if (family === "ipv6") {
+  if (family === 'ipv6') {
     len = 16;
   }
   const buff = Buffer.alloc(len);
@@ -169,7 +169,7 @@ ip.mask = function (addr, mask) {
 };
 
 ip.cidr = function (cidrString) {
-  const cidrParts = cidrString.split("/");
+  const cidrParts = cidrString.split('/');
 
   const addr = cidrParts[0];
   if (cidrParts.length !== 2) {
@@ -218,7 +218,7 @@ ip.subnet = function (addr, mask) {
 };
 
 ip.cidrSubnet = function (cidrString) {
-  const cidrParts = cidrString.split("/");
+  const cidrParts = cidrString.split('/');
 
   const addr = cidrParts[0];
   if (cidrParts.length !== 2) {
@@ -318,11 +318,11 @@ ip.loopback = function (family) {
   //
   family = _normalizeFamily(family);
 
-  if (family !== "ipv4" && family !== "ipv6") {
-    throw new Error("family must be ipv4 or ipv6");
+  if (family !== 'ipv4' && family !== 'ipv6') {
+    throw new Error('family must be ipv4 or ipv6');
   }
 
-  return family === "ipv4" ? "127.0.0.1" : "fe80::1";
+  return family === 'ipv4' ? '127.0.0.1' : 'fe80::1';
 };
 
 //
@@ -352,7 +352,7 @@ ip.address = function (name, family) {
   // If a specific network interface has been named,
   // return the address.
   //
-  if (name && name !== "private" && name !== "public") {
+  if (name && name !== 'private' && name !== 'public') {
     const res = interfaces[name].filter((details) => {
       const itemFamily = _normalizeFamily(details.family);
       return itemFamily === family;
@@ -378,7 +378,7 @@ ip.address = function (name, family) {
           return true;
         }
 
-        return name === "public" ? ip.isPrivate(details.address) : ip.isPublic(details.address);
+        return name === 'public' ? ip.isPrivate(details.address) : ip.isPublic(details.address);
       });
 
       return addresses.length ? addresses[0].address : undefined;
@@ -390,7 +390,7 @@ ip.address = function (name, family) {
 
 ip.toLong = function (ip) {
   let ipl = 0;
-  ip.split(".").forEach((octet) => {
+  ip.split('.').forEach((octet) => {
     ipl <<= 8;
     ipl += parseInt(octet);
   });
